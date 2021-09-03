@@ -1,4 +1,9 @@
+import requests
+
 class geocode:
+    
+    token = os.getenv("Client_Id")
+    token2 = os.getenv("Client_Secret")
 
     def geocode_coord(direccion):
         """
