@@ -88,5 +88,5 @@ def json_filtrado (datos_finales):
 
 def exportar_json (nombre_fichero, json_new):
     
-    with open('nombre_fichero.json', 'w') as f:
+    with open(f"{nombre_fichero}.json", "w") as f:
         json.dump(json_new, f)
