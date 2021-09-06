@@ -84,11 +84,18 @@ def json_filtrado (datos_finales):
     
     return unjsonnuevo
 
-def crear_columnas_busqueda (lista, city, activity):
+def mod_data_busqueda (lista, city, activity):
 
     df = pd.DataFrame(lista)
-    df = df.assign(ciudad=f"{city}")
-    df = df.assign(actividad=f"{activity}")
+
+    for x in df:
+        if x == "ciudad" or x == "actividad":
+            dfnew = pd.DataFrame(lista)
+            df=df.append(dfNew,ignore_index=True)
+
+        else:
+            df = df.assign(ciudad=f"{city}")
+            df = df.assign(actividad=f"{activity}")
 
     return df
 
