@@ -4,6 +4,8 @@ import json
 from functools import reduce
 import operator
 
+import json
+
 
 
 def geocode_coord(direccion):
@@ -46,9 +48,10 @@ def obtener_datos(resp):
     """
     datos_busqueda = resp["response"]["groups"][0]["items"]
 
-    for x in range(len(datos_busqueda)):
+    datos_finales = []
 
-        datos_finales = datos_busqueda[x]["venue"]
+    for dato in datos_busqueda:
+        datos_finales.append(dato["venue"])
 
     return datos_finales
 
@@ -63,9 +66,9 @@ def type_point(lista):
 
 
 def json_filtrado (datos_finales):
-    mapa_nombre = ["venue", "name"]
-    mapa_latitud = ["venue", "location", "lat"]
-    mapa_longitud = ["venue", "location", "lng"]
+    mapa_nombre = ["name"]
+    mapa_latitud = ["location", "lat"]
+    mapa_longitud = ["location", "lng"]
 
     unjsonnuevo = []
 
@@ -80,3 +83,10 @@ def json_filtrado (datos_finales):
         unjsonnuevo.append(paralista)
     
     return unjsonnuevo
+
+# Exportamos el json con json.dump
+
+def exportar_json (nombre_fichero, json_new):
+    
+    with open('nombre_fichero.json', 'w') as f:
+        json.dump(json_new, f)
