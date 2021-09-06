@@ -4,7 +4,7 @@ import json
 from functools import reduce
 import operator
 
-import json
+import pandas as pd
 
 
 
@@ -83,6 +83,14 @@ def json_filtrado (datos_finales):
         unjsonnuevo.append(paralista)
     
     return unjsonnuevo
+
+def crear_columnas_busqueda (lista, city, activity):
+
+    df = pd.DataFrame(lista)
+    df = df.assign(ciudad=f"{city}")
+    df = df.assign(actividad=f"{activity}")
+
+    return df
 
 # Exportamos el json con json.dump
 
