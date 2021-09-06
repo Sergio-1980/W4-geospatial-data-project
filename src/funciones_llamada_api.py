@@ -1,6 +1,9 @@
 import requests
 import json
 
+from functools import reduce
+import operator
+
 
 
 def geocode_coord(direccion):
@@ -15,7 +18,8 @@ def geocode_coord(direccion):
         }
     except:
         return data
-    
+
+
 def generar_json(diccionario, name, token, token2):
     """
     Esta función genera un json
@@ -47,6 +51,16 @@ def obtener_datos(resp):
         datos_finales = datos_busqueda[x]["venue"]
 
     return datos_finales
+
+
+def getFromDict(diccionario, mapa):
+    return reduce(operator.getitem,mapa,diccionario)
+
+
+def type_point(lista):
+    return {"type": "Point", 
+            "coordinates": lista }
+
 
 def json_filtrado (datos_finales):
     mapa_nombre = ["venue", "name"]
