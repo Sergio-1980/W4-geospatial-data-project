@@ -1,6 +1,3 @@
-# Librerias importadas token
-
-
 import requests
 import json
 
@@ -20,6 +17,9 @@ def geocode_coord(direccion):
         return data
     
 def generar_json(diccionario, name, token, token2):
+    """
+    Esta función genera un json
+    """
     
     url_query = 'https://api.foursquare.com/v2/venues/explore'
     
@@ -35,3 +35,11 @@ def generar_json(diccionario, name, token, token2):
     resp = requests.get(url_query, params=parametros).json()
     
     return resp
+
+def obtener_datos(resp):
+    """
+    Esta función filtra los datos del json
+    """
+    datos_finales = resp["response"]["groups"][0]["items"]
+
+    return datos_finales
