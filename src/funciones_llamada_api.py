@@ -43,7 +43,26 @@ def obtener_datos(resp):
     datos_busqueda = resp["response"]["groups"][0]["items"]
 
     for x in range(len(datos_busqueda)):
-        
+
         datos_finales = datos_busqueda[x]["venue"]
 
     return datos_finales
+
+def json_filtrado (datos_finales):
+    mapa_nombre = ["venue", "name"]
+    mapa_latitud = ["venue", "location", "lat"]
+    mapa_longitud = ["venue", "location", "lng"]
+
+    unjsonnuevo = []
+
+    for dic in datos_finales:
+        paralista= {}
+
+        paralista["nombre"]= getFromDict(dic,mapa_nombre)
+        paralista["latitud"]= getFromDict(dic,mapa_latitud)
+        paralista["longitud"]= getFromDict(dic,mapa_longitud)
+        paralista["location"]=  type_point([paralista["longitud"],paralista["latitud"]])
+
+        unjsonnuevo.append(paralista)
+    
+    return unjsonnuevo
