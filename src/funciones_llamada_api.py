@@ -40,6 +40,10 @@ def obtener_datos(resp):
     """
     Esta función filtra los datos del json
     """
-    datos_finales = resp["response"]["groups"][0]["items"]
+    datos_busqueda = resp["response"]["groups"][0]["items"]
+
+    for x in range(len(datos_busqueda)):
+        
+        datos_finales = datos_busqueda[x]["venue"]
 
     return datos_finales
