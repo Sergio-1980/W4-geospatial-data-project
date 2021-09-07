@@ -22,36 +22,36 @@ def geocode_coord(direccion):
         return data
 
 
-def generar_json(diccionario, name, token, token2):
+def generar_json(url, diccionario, token, token2, *args ):
     """
     Esta función genera un json
     """
+    lst = []
+    for i in args:
+        parametros = {
+            "client_id": token,
+            "client_secret": token2,
+            "v": "20180323",
+            "ll": f"{diccionario['coordinates'][0]}, {diccionario['coordinates'][1]}",
+            "query": i,
+            "limit": 200
+        }
     
-    url_query = 'https://api.foursquare.com/v2/venues/explore'
-    
-    parametros = {
-        "client_id": token,
-        "client_secret": token2,
-        "v": "20180323",
-        "ll": f"{diccionario['coordinates'][0]}, {diccionario['coordinates'][1]}",
-        "query": name,
-        "limit": 200
-    }
-    
-    resp = requests.get(url_query, params=parametros).json()
-    
-    return resp
+        resp = requests.get(url, params=parametros).json()
+        lst.append(resp)
+    return lst
 
 def obtener_datos(resp):
     """
     Esta función filtra los datos del json
     """
-    datos_busqueda = resp["response"]["groups"][0]["items"]
-
     datos_finales = []
+    for i in resp:
+        datos_busqueda = i["response"]["groups"][0]["items"]
 
-    for dato in datos_busqueda:
-        datos_finales.append(dato["venue"])
+
+        for dato in datos_busqueda:
+            datos_finales.append(dato["venue"])
 
     return datos_finales
 
@@ -69,35 +69,37 @@ def json_filtrado (datos_finales):
     mapa_nombre = ["name"]
     mapa_latitud = ["location", "lat"]
     mapa_longitud = ["location", "lng"]
+    mapa_ciudad= ["location", "state"]
 
     unjsonnuevo = []
 
-    for dic in datos_finales:
-        paralista= {}
+    for dic in datos_finales:  
 
-        paralista["nombre"]= getFromDict(dic,mapa_nombre)
-        paralista["latitud"]= getFromDict(dic,mapa_latitud)
-        paralista["longitud"]= getFromDict(dic,mapa_longitud)
-        paralista["location"]=  type_point([paralista["longitud"],paralista["latitud"]])
+        try:
+            paralista= {}
+            paralista["nombre"]= getFromDict(dic,mapa_nombre)
+            paralista["latitud"]= getFromDict(dic,mapa_latitud)
+            paralista["longitud"]= getFromDict(dic,mapa_longitud)
+            paralista["ciudad"]= getFromDict(dic,mapa_ciudad)
+            paralista["location"]=  type_point([paralista["longitud"],paralista["latitud"]])
+            unjsonnuevo.append(paralista)
+        except:
+            pass
 
-        unjsonnuevo.append(paralista)
+    return pd.DataFrame(unjsonnuevo)
+
+def create_cat (datos_finales, full_df):
+    lst= []
+    for dic in datos_finales: 
+        for i in list(range(145)):
+            
+            lst.append(datos_finales[i]["categories"][0]["name"])
+            len(lst)
     
-    return unjsonnuevo
+    x = pd.Series(lst)
+    full_df["category"] = x
+    return full_df 
 
-def mod_data_busqueda (lista, city, activity):
-
-    df = pd.DataFrame(lista)
-
-    for x in df:
-        if x == "ciudad" or x == "actividad":
-            dfnew = pd.DataFrame(lista)
-            df=df.append(dfNew,ignore_index=True)
-
-        else:
-            df = df.assign(ciudad=f"{city}")
-            df = df.assign(actividad=f"{activity}")
-
-    return df
 
 # Exportamos el json con json.dump
 
